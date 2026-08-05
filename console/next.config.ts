@@ -1,17 +1,13 @@
 import type { NextConfig } from "next";
 
+// "standalone" output is for Docker only. Vercel manages its own output format.
+// This detects Vercel at build time (VERCEL env var is set automatically).
+const isVercel = process.env.VERCEL === "1";
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  // "standalone" is for Docker. Vercel uses its own output — remove when deploying to Vercel.
-  // Keep for local Docker dev; override with NEXT_OUTPUT=export env var for Vercel if needed.
-  output: (process.env.NEXT_OUTPUT as NextConfig["output"]) ?? "standalone",
+  ...(isVercel ? {} : { output: "standalone" }),
   devIndicators: false,
-  // Allow streaming responses from Render backend agents
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["localhost:3020", process.env.NEXTAUTH_URL ?? ""].filter(Boolean),
-    },
-  },
 };
 
 export default nextConfig;
