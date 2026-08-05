@@ -1,0 +1,227 @@
+## Render Blueprint — Okta Agentic Patterns Demo
+## Deploy all backend services from one file.
+## After deploying, copy each service's public URL into the Vercel environment variables.
+##
+## Docs: https://render.com/docs/blueprint-spec
+
+services:
+
+  # ── Shared Infrastructure ───────────────────────────────────────────────────
+
+  - type: web
+    name: okta-demo-event-bus
+    runtime: node
+    rootDir: shared/event-bus
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALLOWED_ORIGINS
+        sync: false   # Set to your Vercel URL after deploying console, e.g. https://your-app.vercel.app
+
+  # ── MCP Resource Servers ────────────────────────────────────────────────────
+
+  - type: web
+    name: okta-demo-hr-server
+    runtime: node
+    rootDir: shared/mcp-servers/hr
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /.well-known/oauth-protected-resource
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OKTA_ISSUER
+        sync: false   # https://YOUR_OKTA_DOMAIN/oauth2/HR_AUTHZ_SERVER_ID
+      - key: OKTA_AUDIENCE
+        value: api:hr
+      - key: EVENT_BUS_URL
+        sync: false   # https://okta-demo-event-bus.onrender.com
+      - key: PATTERN_IDS
+        value: p1,p3,p6,p7
+      - key: DEMO_THEME
+        value: default
+
+  - type: web
+    name: okta-demo-finance-server
+    runtime: node
+    rootDir: shared/mcp-servers/finance
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /.well-known/oauth-protected-resource
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OKTA_ISSUER
+        sync: false   # https://YOUR_OKTA_DOMAIN/oauth2/FINANCE_AUTHZ_SERVER_ID
+      - key: OKTA_AUDIENCE
+        value: api:finance
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: PATTERN_IDS
+        value: p1,p3,p6,p7
+      - key: DEMO_THEME
+        value: default
+
+  - type: web
+    name: okta-demo-inventory-server
+    runtime: node
+    rootDir: shared/mcp-servers/inventory
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /.well-known/oauth-protected-resource
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OKTA_ISSUER
+        sync: false   # https://YOUR_OKTA_DOMAIN/oauth2/INVENTORY_AUTHZ_SERVER_ID
+      - key: OKTA_AUDIENCE
+        value: api://inventory-resource
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: PATTERN_IDS
+        value: p2,p5
+      - key: DEMO_THEME
+        value: default
+
+  # ── Pattern Agents ──────────────────────────────────────────────────────────
+
+  - type: web
+    name: okta-demo-p2-agent
+    runtime: node
+    rootDir: patterns/p2-third-party-single/agent
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: INVENTORY_SERVER_URL
+        sync: false   # https://okta-demo-inventory-server.onrender.com
+      - key: CONSOLE_URL
+        sync: false   # https://your-app.vercel.app
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: web
+    name: okta-demo-p3-agent
+    runtime: node
+    rootDir: patterns/p3-first-party-xaa/agent
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: OKTA_DOMAIN
+        sync: false
+      - key: OKTA_ISSUER
+        sync: false
+      - key: OKTA_CLIENT_ID
+        sync: false   # P3_OKTA_CLIENT_ID
+      - key: OKTA_AI_AGENT_ID
+        sync: false   # P3_OKTA_AI_AGENT_ID
+      - key: OKTA_PRIVATE_KEY
+        sync: false   # P3_OKTA_PRIVATE_KEY
+      - key: OKTA_API_TOKEN
+        sync: false
+      - key: HR_RESOURCE_AUDIENCE
+        value: api:hr
+      - key: FINANCE_RESOURCE_AUDIENCE
+        value: api:finance
+      - key: PROTECTED_API_URL
+        sync: false   # https://okta-demo-hr-server.onrender.com
+      - key: FINANCE_API_URL
+        sync: false   # https://okta-demo-finance-server.onrender.com
+      - key: CONSOLE_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: web
+    name: okta-demo-p4-agent
+    runtime: node
+    rootDir: patterns/p4-outbound-saas/agent
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: OKTA_DOMAIN
+        sync: false
+      - key: OKTA_AUTH_SERVER_ID
+        value: default
+      - key: OKTA_AI_AGENT_ID
+        sync: false   # P4_OKTA_AI_AGENT_ID
+      - key: OKTA_PRIVATE_KEY
+        sync: false   # P4_OKTA_PRIVATE_KEY
+      - key: GITHUB_STS_RESOURCE
+        sync: false   # P4_GITHUB_STS_RESOURCE
+      - key: SLACK_STS_RESOURCE
+        sync: false   # P4_SLACK_STS_RESOURCE
+      - key: CONSOLE_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: web
+    name: okta-demo-p6-agent
+    runtime: node
+    rootDir: patterns/p6-autonomous-m2m/agent
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EVENT_BUS_URL
+        sync: false
+      - key: OKTA_DOMAIN
+        sync: false
+      - key: OKTA_API_TOKEN
+        sync: false
+      - key: OKTA_AI_AGENT_ID
+        sync: false   # P6_ORCHESTRATOR_OKTA_AI_AGENT_ID
+      - key: OKTA_PRIVATE_KEY
+        sync: false   # P6_ORCHESTRATOR_OKTA_PRIVATE_KEY
+      - key: P6_OKTA_CLIENT_ID
+        sync: false
+      - key: P6_OKTA_CLIENT_SECRET
+        sync: false
+      - key: HR_AUTHZ_SERVER_ID
+        sync: false
+      - key: HR_RESOURCE_AUDIENCE
+        value: api:hr
+      - key: FINANCE_AUTHZ_SERVER_ID
+        sync: false
+      - key: FINANCE_RESOURCE_AUDIENCE
+        value: api:finance
+      - key: HR_API_URL
+        sync: false   # https://okta-demo-hr-server.onrender.com
+      - key: FINANCE_API_URL
+        sync: false   # https://okta-demo-finance-server.onrender.com
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: SLACK_DEFAULT_CHANNEL
+        value: demo-reports
+      - key: CONSOLE_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
