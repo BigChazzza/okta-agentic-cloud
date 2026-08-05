@@ -546,6 +546,11 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
     return unsubscribe;
   }, [pattern.id]);
 
+  // Warm up all backend services when the pattern page loads
+  useEffect(() => {
+    fetch("/api/warmup").catch(() => null);
+  }, []);
+
   // Close modal / popover on Escape
   useEffect(() => {
     if (!openDiagram && !infoOpen && !openVideo) return;
