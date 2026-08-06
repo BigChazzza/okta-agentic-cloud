@@ -1,17 +1,21 @@
 import Link from "next/link";
 import { Settings, ExternalLink } from "lucide-react";
-import { readSettings } from "@/lib/settings";
 import FooterBar from "@/components/FooterBar";
 
-export default function TopBar() {
-  const { menuLinks } = readSettings();
+const RESOURCE_LINKS = [
+  { id: "ai-rocks",   title: "AI Rocks",   url: "https://ai.atko.rocks/blueprint" },
+  { id: "mcp-bridge", title: "MCP Bridge", url: "https://admin.ai-patterns.oktademo.app/" },
+  { id: "okta",       title: "Okta",       url: "https://demo-ai-patterns.oktapreview.com/" },
+  { id: "whiteboard", title: "Whiteboard", url: "https://okta-ai-diagram.vercel.app/" },
+];
 
+export default function TopBar() {
   return (
     <div className="flex w-full items-center justify-between px-5 py-2 border-b border-white/5">
       <FooterBar />
 
       <div className="flex items-center gap-2">
-        {menuLinks.map((link) => (
+        {RESOURCE_LINKS.map((link) => (
           <a
             key={link.id}
             href={link.url}
