@@ -30,6 +30,7 @@ export interface Pattern {
   note?: string; // optional note shown on the landing page card (e.g. requirements)
   mcpServers?: McpServerDef[]; // MCP resource servers used by this pattern
   platforms?: PlatformLink[]; // P8: per-platform video (detail page) + architecture diagram (landing card) links
+  hidden?: boolean; // when true, omit from the home-page grid (detail page still accessible)
 }
 
 export const PATTERNS: Pattern[] = [
@@ -142,6 +143,7 @@ export const PATTERNS: Pattern[] = [
     rightPanel: "chat",
     requiresUserToken: true,
     buildStatus: "pending",
+    hidden: true,
     note: "Requires companion Android mobile app",
     mcpServers: [
       {
@@ -220,6 +222,7 @@ export const PATTERNS: Pattern[] = [
     agentUrl: null,
     rightPanel: "videos",
     buildStatus: "pending",
+    hidden: true,
     note: "Video showcase",
     platforms: [
       {

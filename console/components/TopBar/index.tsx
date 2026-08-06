@@ -7,6 +7,7 @@ const RESOURCE_LINKS = [
   { id: "mcp-bridge", title: "MCP Bridge", url: "https://admin.ai-patterns.oktademo.app/" },
   { id: "okta",       title: "Okta",       url: "https://demo-ai-patterns.oktapreview.com/" },
   { id: "whiteboard", title: "Whiteboard", url: "https://okta-ai-diagram.vercel.app/" },
+  { id: "xaa-dev",    title: "XAA Dev",    url: "https://xaa.dev/" },
 ];
 
 export default function TopBar() {
