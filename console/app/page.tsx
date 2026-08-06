@@ -33,21 +33,38 @@ export default async function Home() {
   return (
     <main className="relative min-h-screen px-6 py-8">
       {/* Header */}
-      <div className="mx-auto mb-8 max-w-5xl text-center">
+      <div className="mx-auto mb-10 max-w-3xl text-center">
+        {/* Eyebrow pill — Okta blue border */}
         <div
-          className="mb-2 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium neon-text neon-border"
-          style={{ background: "rgb(var(--neon-accent) / 0.1)", color: "var(--neon-cyan)", borderColor: "rgb(var(--neon-accent) / 0.5)" }}
+          className="mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[12px] font-medium tracking-wide"
+          style={{
+            background: "rgba(22,98,221,0.1)",
+            color: "#4B90F8",
+            borderColor: "rgba(22,98,221,0.35)",
+          }}
         >
-          <ShieldCheck size={14} />
-          Okta Agentic Identity Patterns
+          <ShieldCheck size={12} />
+          Secure AI — Identity Patterns
         </div>
-        <h1 className="mb-2 text-3xl font-bold tracking-tight text-white">
-          Okta Agentic Demo{industryId !== DEFAULT_INDUSTRY_ID ? ` for ${industry.label}` : ""}
+
+        {/* Main heading — Plus Jakarta Sans, Okta-style gradient */}
+        <h1
+          className="mb-4 font-extrabold leading-[1.1] tracking-tight"
+          style={{
+            fontFamily: "var(--font-jakarta, sans-serif)",
+            fontSize: "clamp(2rem, 5vw, 3.25rem)",
+            background: "linear-gradient(135deg, #FFFFFF 30%, #A5C8FF 65%, #C4A8FF 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Okta{industryId !== DEFAULT_INDUSTRY_ID ? ` ${industry.label}` : ""} Agentic Demo
         </h1>
-        <p className="mx-auto max-w-xl text-sm text-slate-400">
-          Eight patterns for securing AI agents with Okta. Each pattern is
-          independently runnable — select one to see the live auth flow and
-          interact with the agent.
+
+        <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-slate-400">
+          Production-ready patterns for securing AI agents with Okta. Select a
+          pattern to see the live auth flow and interact with the agent.
         </p>
       </div>
 

@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import TopBar from "@/components/TopBar";
 import { DEFAULT_INDUSTRY_ID } from "@/lib/industries";
 import { DEFAULT_UI_THEME_ID } from "@/lib/ui-themes";
 import { ThemeTransitionOverlay } from "@/components/ThemeTransitionOverlay";
 import "./globals.css";
+
+// Plus Jakarta Sans — closest Google Font to Okta's "Aeonik" brand typeface
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +46,7 @@ export default async function RootLayout({
       lang="en"
       data-theme={industryId}
       data-ui-theme={uiThemeId}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${jakartaSans.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col text-white">
         <TopBar />

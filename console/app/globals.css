@@ -25,22 +25,38 @@ html[data-theme="education"]     { --neon-cyan: #8b5cf6; --neon-accent: 139 92 2
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-jakarta, var(--font-geist-sans));
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Okta AI aurora background ────────────────────── */
 body {
   background-color: var(--background);
+  /* Layered radial gradient orbs replicating Okta Secure AI page aurora */
   background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(22, 98, 221, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(124, 58, 237, 0.12) 0%, transparent 55%),
+    /* Grain/noise texture for depth */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
+    /* Electric blue — upper-left hero glow */
+    radial-gradient(ellipse 75% 55% at -8% 2%, rgba(0, 102, 255, 0.38) 0%, transparent 62%),
+    /* Violet — upper-right */
+    radial-gradient(ellipse 55% 50% at 108% 5%, rgba(123, 47, 247, 0.32) 0%, transparent 58%),
+    /* Cyan tint — top-center fade */
+    radial-gradient(ellipse 65% 35% at 50% -5%, rgba(0, 170, 255, 0.14) 0%, transparent 52%),
+    /* Deep indigo — mid-left depth */
+    radial-gradient(ellipse 45% 35% at 15% 40%, rgba(67, 20, 196, 0.12) 0%, transparent 50%),
     var(--theme-bg-image);
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  background-size: 100% auto, 100% auto, 50vmin 50vmin;
-  background-position: center top, center bottom, center center;
-  background-attachment: fixed, fixed, fixed;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 300px 300px, 100% auto, 100% auto, 100% auto, 100% auto, 50vmin 50vmin;
+  background-position: top left, center top, center top, center top, center center, center center;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
   color: var(--foreground);
-  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  font-family: var(--font-jakarta, var(--font-geist-sans, Arial, Helvetica, sans-serif));
+}
+
+/* ── Okta heading font ─────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-jakarta, var(--font-geist-sans, Arial, Helvetica, sans-serif));
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 body::after {
