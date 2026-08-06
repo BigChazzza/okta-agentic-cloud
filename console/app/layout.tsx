@@ -5,6 +5,7 @@ import TopBar from "@/components/TopBar";
 import { DEFAULT_INDUSTRY_ID } from "@/lib/industries";
 import { DEFAULT_UI_THEME_ID } from "@/lib/ui-themes";
 import { ThemeTransitionOverlay } from "@/components/ThemeTransitionOverlay";
+import { ApiKeyGate } from "@/components/ApiKeyGate";
 import "./globals.css";
 
 // Plus Jakarta Sans — closest Google Font to Okta's "Aeonik" brand typeface
@@ -50,7 +51,9 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col text-white">
         <TopBar />
-        {children}
+        <ApiKeyGate>
+          {children}
+        </ApiKeyGate>
         <ThemeTransitionOverlay />
       </body>
     </html>
