@@ -1,12 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d1117;
-  --foreground: #e2e8f0;
-  --neon-cyan: #22d3ee;
-  --neon-purple: #a855f7;
+  --background: #030D1F;
+  --foreground: #E8EFF8;
+  /* Okta AI palette */
+  --okta-blue: #1662DD;
+  --okta-purple: #7C3AED;
+  --okta-blue-light: #4B90F8;
+  /* Legacy names kept for compatibility — now Okta blue */
+  --neon-cyan: #1662DD;
+  --neon-purple: #7C3AED;
   --neon-green: #10b981;
-  --neon-accent: 34 211 238;
+  --neon-accent: 22 98 221;
   --theme-bg-image: none;
 }
 
@@ -27,12 +32,13 @@ html[data-theme="education"]     { --neon-cyan: #8b5cf6; --neon-accent: 139 92 2
 body {
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 100% 50% at 50% -5%, rgb(var(--neon-accent) / 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(22, 98, 221, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(124, 58, 237, 0.12) 0%, transparent 55%),
     var(--theme-bg-image);
-  background-repeat: no-repeat, no-repeat;
-  background-size: 100% auto, 50vmin 50vmin;
-  background-position: center top, center center;
-  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, 100% auto, 50vmin 50vmin;
+  background-position: center top, center bottom, center center;
+  background-attachment: fixed, fixed, fixed;
   color: var(--foreground);
   font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
 }
@@ -43,91 +49,108 @@ body::after {
   bottom: 8px;
   right: 12px;
   font-size: 10px;
-  color: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.08);
   pointer-events: none;
   z-index: 9999;
 }
 
 @layer utilities {
+  /* Okta blue glow — replaces neon-border */
   .neon-border {
     box-shadow:
-      0 0 0 1px rgb(var(--neon-accent) / 0.6),
-      0 0 20px rgb(var(--neon-accent) / 0.25),
-      0 0 40px rgb(var(--neon-accent) / 0.08),
-      inset 0 0 20px rgb(var(--neon-accent) / 0.05);
+      0 0 0 1px rgb(var(--neon-accent) / 0.5),
+      0 0 20px rgb(var(--neon-accent) / 0.18),
+      0 0 40px rgb(var(--neon-accent) / 0.06),
+      inset 0 0 20px rgb(var(--neon-accent) / 0.04);
   }
   .neon-glow {
     box-shadow:
-      0 0 10px rgb(var(--neon-accent) / 0.7),
-      0 0 30px rgb(var(--neon-accent) / 0.35),
-      0 0 60px rgb(var(--neon-accent) / 0.1);
+      0 0 10px rgb(var(--neon-accent) / 0.6),
+      0 0 30px rgb(var(--neon-accent) / 0.25),
+      0 0 60px rgb(var(--neon-accent) / 0.08);
   }
   .neon-text {
     text-shadow:
-      0 0 8px currentColor,
-      0 0 20px currentColor;
-  }
-  .neon-purple-border {
-    box-shadow:
-      0 0 0 1px rgba(168, 85, 247, 0.6),
-      0 0 20px rgba(168, 85, 247, 0.2),
-      inset 0 0 20px rgba(168, 85, 247, 0.04);
-  }
-  .neon-green-border {
-    box-shadow:
-      0 0 0 1px rgba(16, 185, 129, 0.6),
-      0 0 20px rgba(16, 185, 129, 0.25),
-      0 0 40px rgba(16, 185, 129, 0.08),
-      inset 0 0 20px rgba(16, 185, 129, 0.05);
-  }
-  .neon-red-border {
-    box-shadow:
-      0 0 0 1px rgba(239, 68, 68, 0.6),
-      0 0 20px rgba(239, 68, 68, 0.25),
-      0 0 40px rgba(239, 68, 68, 0.08),
-      inset 0 0 20px rgba(239, 68, 68, 0.05);
+      0 0 10px currentColor,
+      0 0 24px currentColor;
   }
 
-  /* Hover-activated glow — add this to any box that should light up on hover */
+  /* Okta purple card border */
+  .neon-purple-border {
+    box-shadow:
+      0 0 0 1px rgba(124, 58, 237, 0.5),
+      0 0 20px rgba(124, 58, 237, 0.15),
+      inset 0 0 20px rgba(124, 58, 237, 0.03);
+  }
+  /* Emerald success border */
+  .neon-green-border {
+    box-shadow:
+      0 0 0 1px rgba(16, 185, 129, 0.5),
+      0 0 20px rgba(16, 185, 129, 0.18),
+      0 0 40px rgba(16, 185, 129, 0.06),
+      inset 0 0 20px rgba(16, 185, 129, 0.04);
+  }
+  /* Red error border */
+  .neon-red-border {
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 0.5),
+      0 0 20px rgba(239, 68, 68, 0.18),
+      0 0 40px rgba(239, 68, 68, 0.06),
+      inset 0 0 20px rgba(239, 68, 68, 0.04);
+  }
+
+  /* Card hover glow — Okta blue */
   .neon-card {
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
   }
   .neon-card:hover {
     box-shadow:
-      0 0 0 1px rgb(var(--neon-accent) / 0.7),
-      0 0 24px rgb(var(--neon-accent) / 0.3),
-      0 0 48px rgb(var(--neon-accent) / 0.1),
-      inset 0 0 24px rgb(var(--neon-accent) / 0.06);
+      0 0 0 1px rgb(var(--neon-accent) / 0.55),
+      0 0 24px rgb(var(--neon-accent) / 0.2),
+      0 0 48px rgb(var(--neon-accent) / 0.07),
+      inset 0 0 24px rgb(var(--neon-accent) / 0.04);
   }
 
-  /* Hover-activated glow for buttons */
+  /* Button hover glow — Okta blue */
   .neon-btn {
     transition: box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
   }
   .neon-btn:hover:not(:disabled) {
     box-shadow:
-      0 0 12px rgb(var(--neon-accent) / 0.8),
-      0 0 28px rgb(var(--neon-accent) / 0.4),
-      0 0 50px rgb(var(--neon-accent) / 0.15);
+      0 0 12px rgb(var(--neon-accent) / 0.65),
+      0 0 28px rgb(var(--neon-accent) / 0.28),
+      0 0 50px rgb(var(--neon-accent) / 0.1);
+  }
+
+  /* Okta gradient text utility */
+  .okta-gradient-text {
+    background: linear-gradient(135deg, #4B90F8, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Okta gradient border utility */
+  .okta-gradient-border {
+    border-image: linear-gradient(135deg, #1662DD, #7C3AED) 1;
   }
 }
 
 /* =======================================================
    VISUAL THEME OVERRIDES
-   These rules override Tailwind utilities via higher
-   specificity (attribute + class = [0,2,0] beats [0,1,0]).
    ======================================================= */
 
 /* ── Light theme ────────────────────────────────────── */
 html[data-ui-theme="light"] {
-  --background: #f0f9ff;
+  --background: #f0f6ff;
   --foreground: #0c1929;
 }
 
 html[data-ui-theme="light"] body {
-  background-color: #f0f9ff;
+  background-color: #f0f6ff;
   background-image:
-    radial-gradient(ellipse 100% 50% at 50% -5%, rgb(var(--neon-accent) / 0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(22, 98, 221, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(124, 58, 237, 0.05) 0%, transparent 55%),
     var(--theme-bg-image);
 }
 
@@ -147,14 +170,12 @@ html[data-ui-theme="light"] .bg-white\/\[0\.04\] { background-color: rgba(0,0,0,
 html[data-ui-theme="light"] .bg-white\/\[0\.06\] { background-color: rgba(0,0,0,0.07); }
 html[data-ui-theme="light"] .bg-white\/5 { background-color: rgba(0,0,0,0.05); }
 html[data-ui-theme="light"] .bg-white\/10 { background-color: rgba(0,0,0,0.07); }
-html[data-ui-theme="light"] .bg-\[\#0d1117\] { background-color: #f0f9ff; }
 
 html[data-ui-theme="light"] .border-white\/5 { border-color: rgba(0,0,0,0.06); }
 html[data-ui-theme="light"] .border-white\/10 { border-color: rgba(0,0,0,0.12); }
 html[data-ui-theme="light"] .border-white\/20 { border-color: rgba(0,0,0,0.18); }
 html[data-ui-theme="light"] .border-white\/30 { border-color: rgba(0,0,0,0.25); }
 
-/* dark gray backgrounds → light tinted panels */
 html[data-ui-theme="light"] .bg-gray-950,
 html[data-ui-theme="light"] .bg-gray-900,
 html[data-ui-theme="light"] .bg-gray-900\/80,
@@ -181,7 +202,6 @@ html[data-ui-theme="light"] .bg-black\/75,
 html[data-ui-theme="light"] .bg-black\/60,
 html[data-ui-theme="light"] .bg-black\/20 { background-color: rgba(12,25,41,0.04); }
 
-/* dark borders → neutral */
 html[data-ui-theme="light"] .border-gray-700\/50,
 html[data-ui-theme="light"] .border-gray-700\/40,
 html[data-ui-theme="light"] .border-gray-700\/30,
@@ -197,9 +217,7 @@ html[data-ui-theme="light"] select {
 }
 
 html[data-ui-theme="light"] input::placeholder,
-html[data-ui-theme="light"] textarea::placeholder {
-  color: #94a3b8;
-}
+html[data-ui-theme="light"] textarea::placeholder { color: #94a3b8; }
 
 /* ── Colorful theme ─────────────────────────────────── */
 html[data-ui-theme="colorful"] {
@@ -222,7 +240,6 @@ html[data-ui-theme="colorful"] body {
 html[data-ui-theme="colorful"] .text-white { color: #1a0a2e; }
 html[data-ui-theme="colorful"] .text-white\/20 { color: rgba(26,10,46,0.45); }
 html[data-ui-theme="colorful"] .text-white\/30 { color: rgba(26,10,46,0.5); }
-html[data-ui-theme="colorful"] .text-rose-400\/50 { color: rgba(192,38,211,0.7); }
 html[data-ui-theme="colorful"] .text-slate-50 { color: #2d1b4e; }
 html[data-ui-theme="colorful"] .text-slate-100 { color: #3b1f5e; }
 html[data-ui-theme="colorful"] .text-slate-200 { color: #4b2575; }
@@ -231,64 +248,22 @@ html[data-ui-theme="colorful"] .text-slate-400 { color: #6b21a8; }
 html[data-ui-theme="colorful"] .text-slate-500 { color: #7e22ce; }
 
 html[data-ui-theme="colorful"] .bg-white\/\[0\.03\] { background-color: rgba(192,38,211,0.05); }
-html[data-ui-theme="colorful"] .bg-white\/\[0\.02\] { background-color: rgba(192,38,211,0.04); }
 html[data-ui-theme="colorful"] .bg-white\/\[0\.04\] { background-color: rgba(192,38,211,0.06); }
-html[data-ui-theme="colorful"] .bg-white\/\[0\.06\] { background-color: rgba(192,38,211,0.08); }
 html[data-ui-theme="colorful"] .bg-white\/5 { background-color: rgba(192,38,211,0.06); }
-html[data-ui-theme="colorful"] .bg-white\/10 { background-color: rgba(192,38,211,0.08); }
-html[data-ui-theme="colorful"] .bg-\[\#0d1117\] { background-color: #fdf4ff; }
-
 html[data-ui-theme="colorful"] .border-white\/5 { border-color: rgba(192,38,211,0.1); }
 html[data-ui-theme="colorful"] .border-white\/10 { border-color: rgba(192,38,211,0.2); }
-html[data-ui-theme="colorful"] .border-white\/20 { border-color: rgba(192,38,211,0.3); }
-html[data-ui-theme="colorful"] .border-white\/30 { border-color: rgba(192,38,211,0.4); }
-
-/* dark gray backgrounds → light purple-tinted panels */
-html[data-ui-theme="colorful"] .bg-gray-950,
-html[data-ui-theme="colorful"] .bg-gray-900,
-html[data-ui-theme="colorful"] .bg-gray-900\/80,
-html[data-ui-theme="colorful"] .bg-gray-900\/60,
-html[data-ui-theme="colorful"] .bg-gray-900\/40 { background-color: rgba(192,38,211,0.06); }
 
 html[data-ui-theme="colorful"] .bg-gray-800,
 html[data-ui-theme="colorful"] .bg-gray-800\/80,
 html[data-ui-theme="colorful"] .bg-gray-800\/60,
-html[data-ui-theme="colorful"] .bg-gray-800\/40,
-html[data-ui-theme="colorful"] .bg-gray-800\/30,
-html[data-ui-theme="colorful"] .bg-gray-800\/20 { background-color: rgba(192,38,211,0.08); }
+html[data-ui-theme="colorful"] .bg-gray-800\/40 { background-color: rgba(192,38,211,0.07); }
 
 html[data-ui-theme="colorful"] .bg-gray-700,
-html[data-ui-theme="colorful"] .bg-gray-700\/60,
 html[data-ui-theme="colorful"] .bg-gray-700\/50,
-html[data-ui-theme="colorful"] .bg-gray-700\/40,
-html[data-ui-theme="colorful"] .bg-gray-700\/30,
-html[data-ui-theme="colorful"] .bg-gray-700\/20,
-html[data-ui-theme="colorful"] .bg-gray-600,
-html[data-ui-theme="colorful"] .bg-slate-700 { background-color: rgba(192,38,211,0.11); }
-
-html[data-ui-theme="colorful"] .bg-black\/75,
-html[data-ui-theme="colorful"] .bg-black\/60,
-html[data-ui-theme="colorful"] .bg-black\/20 { background-color: rgba(192,38,211,0.06); }
-
-/* dark borders → purple-tinted */
-html[data-ui-theme="colorful"] .border-gray-700\/50,
-html[data-ui-theme="colorful"] .border-gray-700\/40,
-html[data-ui-theme="colorful"] .border-gray-700\/30,
-html[data-ui-theme="colorful"] .border-gray-600\/40,
-html[data-ui-theme="colorful"] .border-gray-700 { border-color: rgba(192,38,211,0.25); }
+html[data-ui-theme="colorful"] .bg-gray-700\/40 { background-color: rgba(192,38,211,0.1); }
 
 html[data-ui-theme="colorful"] input,
-html[data-ui-theme="colorful"] textarea,
-html[data-ui-theme="colorful"] select {
-  color: #1a0a2e;
-  background-color: rgba(192,38,211,0.05);
-  border-color: rgba(192,38,211,0.2);
-}
-
-html[data-ui-theme="colorful"] input::placeholder,
-html[data-ui-theme="colorful"] textarea::placeholder {
-  color: #a855f7;
-}
+html[data-ui-theme="colorful"] textarea { color: #1a0a2e; background-color: rgba(192,38,211,0.05); }
 
 /* ── Monochrome theme ───────────────────────────────── */
 html[data-ui-theme="monochrome"] {
@@ -332,9 +307,7 @@ html[data-ui-theme="old-school"] body {
   font-family: "Courier New", Courier, monospace !important;
 }
 
-html[data-ui-theme="old-school"] body * {
-  font-family: "Courier New", Courier, monospace !important;
-}
+html[data-ui-theme="old-school"] body * { font-family: "Courier New", Courier, monospace !important; }
 
 html[data-ui-theme="old-school"] h1,
 html[data-ui-theme="old-school"] h2,
@@ -350,34 +323,15 @@ html[data-ui-theme="old-school"] .text-slate-400,
 html[data-ui-theme="old-school"] .text-slate-500 { color: #00cc33; }
 
 html[data-ui-theme="old-school"] .bg-white\/\[0\.03\],
-html[data-ui-theme="old-school"] .bg-white\/\[0\.02\],
 html[data-ui-theme="old-school"] .bg-white\/\[0\.04\],
-html[data-ui-theme="old-school"] .bg-white\/\[0\.06\] { background-color: rgba(0,255,65,0.05); }
-html[data-ui-theme="old-school"] .bg-white\/5 { background-color: rgba(0,255,65,0.06); }
+html[data-ui-theme="old-school"] .bg-white\/5 { background-color: rgba(0,255,65,0.05); }
 
 html[data-ui-theme="old-school"] .border-white\/5,
 html[data-ui-theme="old-school"] .border-white\/10 { border-color: rgba(0,255,65,0.25); }
-html[data-ui-theme="old-school"] .border-white\/20 { border-color: rgba(0,255,65,0.4); }
-html[data-ui-theme="old-school"] .border-white\/30 { border-color: rgba(0,255,65,0.5); }
 
 html[data-ui-theme="old-school"] input,
-html[data-ui-theme="old-school"] textarea,
-html[data-ui-theme="old-school"] select {
-  color: #00ff41;
-  background-color: rgba(0,255,65,0.05);
-  border-color: rgba(0,255,65,0.4);
-}
+html[data-ui-theme="old-school"] textarea { color: #00ff41; background-color: rgba(0,255,65,0.05); }
 
-html[data-ui-theme="old-school"] input::placeholder,
-html[data-ui-theme="old-school"] textarea::placeholder {
-  color: rgba(0,255,65,0.4);
-}
-
-html[data-ui-theme="old-school"] button {
-  letter-spacing: 0.05em;
-}
-
-/* Scanline flicker animation for old-school */
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   92% { opacity: 0.97; }
@@ -385,6 +339,4 @@ html[data-ui-theme="old-school"] button {
   96% { opacity: 0.98; }
 }
 
-html[data-ui-theme="old-school"] body {
-  animation: flicker 8s infinite;
-}
+html[data-ui-theme="old-school"] body { animation: flicker 8s infinite; }

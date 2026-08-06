@@ -12,9 +12,9 @@ interface PatternCardProps {
 }
 
 const borderClass: Record<string, string> = {
-  done: "border-emerald-500/50 bg-gray-800/80 neon-green-border",
-  blocked: "border-red-500/50 bg-gray-800/60 neon-red-border",
-  pending: "border-gray-700/50 bg-gray-800/40",
+  done:    "border-blue-600/30 bg-[#040E28]/70 neon-green-border",
+  blocked: "border-red-500/40 bg-[#040E28]/60 neon-red-border",
+  pending: "border-white/[0.06] bg-[#040E28]/50",
 };
 
 export function PatternCard({ pattern, active }: PatternCardProps) {
@@ -32,7 +32,10 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
       >
         {/* Header row */}
         <div className="mb-3 flex items-start justify-between gap-3">
-          <span className="font-mono text-xs font-semibold tracking-widest text-cyan-400 uppercase neon-text">
+          <span
+            className="font-mono text-xs font-semibold tracking-widest uppercase"
+            style={{ color: "#4B90F8", textShadow: "0 0 12px rgba(75,144,248,0.5)" }}
+          >
             {pattern.id}
           </span>
           <div className="flex items-center gap-1.5">
@@ -42,7 +45,10 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
               </span>
             )}
             {pattern.badge && (
-              <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-medium text-violet-400">
+              <span
+                className="rounded-full px-2 py-0.5 text-[11px] font-medium"
+                style={{ backgroundColor: "rgba(124,58,237,0.15)", color: "#A78BFA" }}
+              >
                 {pattern.badge}
               </span>
             )}
@@ -64,12 +70,12 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
           <span>{pattern.authFlow}</span>
         </div>
 
-        {/* Note (e.g. requirements for pending patterns) */}
+        {/* Note */}
         {pattern.note && (
           <p className="mb-3 text-[11px] text-amber-400/70 italic">{pattern.note}</p>
         )}
 
-        {/* Architecture diagram links (P8: one per platform) */}
+        {/* Platform diagram links (P8) */}
         {pattern.id === "p8" && pattern.platforms && (
           <div className="mb-3 grid grid-cols-2 gap-2">
             {pattern.platforms.map((platform) => (
@@ -101,7 +107,12 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
         ) : active ? (
           <button
             onClick={(e) => { e.stopPropagation(); router.push(`/patterns/${pattern.id}`); }}
-            className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium neon-btn bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30"
+            className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium neon-btn border transition-all"
+            style={{
+              background: "rgba(22,98,221,0.15)",
+              color: "#4B90F8",
+              borderColor: "rgba(22,98,221,0.35)",
+            }}
           >
             Run Demo
             <ArrowRight size={14} />

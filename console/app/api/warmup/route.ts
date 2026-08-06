@@ -1,45 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// All Render backend service health endpoints
+export const dynamic = "force-dynamic";
+
 const SERVICES = [
-  process.env.EVENT_BUS_INTERNAL_URL,
-  process.env.P2_AGENT_INTERNAL_URL,
-  process.env.P3_AGENT_INTERNAL_URL,
-  process.env.P4_AGENT_INTERNAL_URL,
-  process.env.P6_AGENT_INTERNAL_URL,
-  process.env.HR_SERVER_URL,
-  process.env.FINANCE_SERVER_URL,
-  process.env.INVENTORY_SERVER_URL,
-].filter(Boolean) as string[];
+  { id: "event-bus",        name: "Event Bus",        url: process.env.EVENT_BUS_INTERNAL_URL },
+  { id: "inventory-server", name: "Inventory Server", url: process.env.INVENTORY_SERVER_URL },
+  { id: "hr-server",        name: "HR Server",        url: process.env.HR_SERVER_URL },
+  { id: "finance-server",   name: "Finance Server",   url: process.env.FINANCE_SERVER_URL },
+  { id: "p2-agent",         name: "P2 Agent",         url: process.env.P2_AGENT_INTERNAL_URL },
+  { id: "p3-agent",         name: "P3 Agent",         url: process.env.P3_AGENT_INTERNAL_URL },
+  { id: "p4-agent",         name: "P4 Agent",         url: process.env.P4_AGENT_INTERNAL_URL },
+  { id: "p6-agent",         name: "P6 Agent",         url: process.env.P6_AGENT_INTERNAL_URL },
+];
 
 export async function GET(_req: NextRequest) {
-  // Fire-and-forget pings — we don't wait for them to succeed
-  const pings = SERVICES.map((base) =>
-    fetch(`${base}/health`, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(55_000),
-    }).catch(() => null)
-  );
-
-  // Wait up to 2s to report any that are already awake, then return
   const results = await Promise.allSettled(
-    pings.map((p) =>
-      Promise.race([
-        p,
-        new Promise<null>((res) => setTimeout(() => res(null), 2_000)),
-      ])
-    )
+    SERVICES.map(async (svc) => {
+      if (!svc.url) return { ...svc, ready: false };
+      try {
+        const res = await fetch(`${svc.url}/health`, {
+          cache: "no-store",
+          signal: AbortSignal.timeout(4_000),
+        });
+        return { ...svc, ready: res.ok };
+      } catch {
+        return { ...svc, ready: false };
+      }
+    })
   );
 
-  const statuses = SERVICES.map((url, i) => {
-    const r = results[i];
-    const name = url.split(".")[0].split("//")[1] ?? url;
-    if (r.status === "fulfilled" && r.value && "ok" in r.value) {
-      return { name, ok: (r.value as Response).ok };
-    }
-    return { name, ok: false };
-  });
+  const statuses = results.map((r, i) =>
+    r.status === "fulfilled"
+      ? r.value
+      : { ...SERVICES[i], ready: false }
+  );
 
-  // The background pings continue running — Vercel edge keeps them alive
-  return NextResponse.json({ warming: true, statuses });
+  const readyCount = statuses.filter((s) => s.ready).length;
+
+  return NextResponse.json({
+    allReady: readyCount === SERVICES.length,
+    readyCount,
+    total: SERVICES.length,
+    services: statuses.map(({ id, name, ready }) => ({ id, name, ready })),
+  });
 }

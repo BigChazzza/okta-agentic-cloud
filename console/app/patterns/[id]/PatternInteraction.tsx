@@ -15,6 +15,7 @@ import { MissionPanel, Mission } from "@/components/MissionPanel";
 import { useDemoCredentials } from "@/lib/demo-settings";
 import { PkceChatPanel } from "@/components/PkceChatPanel";
 import { DelegationPanel } from "@/components/DelegationPanel";
+import { ServiceWarmup } from "@/components/ServiceWarmup";
 import { Network, GitFork, ArrowLeft, Shield, Cpu } from "lucide-react";
 import type { IndustryOverrides } from "@/lib/industries";
 
@@ -494,6 +495,7 @@ interface Props {
 
 export function PatternInteraction({ pattern, active, userToken, themeOverrides }: Props) {
   const { credentialHeaders } = useDemoCredentials();
+  const [isWarming, setIsWarming] = useState(true);
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [openDiagram, setOpenDiagram] = useState<DiagramModal>(null);
   const [openVideo, setOpenVideo] = useState<{ title: string; url: string } | null>(null);
@@ -546,10 +548,7 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
     return unsubscribe;
   }, [pattern.id]);
 
-  // Warm up all backend services when the pattern page loads
-  useEffect(() => {
-    fetch("/api/warmup").catch(() => null);
-  }, []);
+  // Warmup is handled by ServiceWarmup component (rendered below)
 
   // Close modal / popover on Escape
   useEffect(() => {
@@ -596,6 +595,9 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
+
+      {/* Service warmup overlay — shown until all Render services are ready */}
+      {isWarming && <ServiceWarmup onReady={() => setIsWarming(false)} />}
 
       {/* Compact header bar */}
       <div className="shrink-0 flex items-center gap-2 min-w-0">
