@@ -17,7 +17,9 @@ export async function GET(req: NextRequest) {
   const origin = process.env.NEXTAUTH_URL ?? req.nextUrl.origin;
   const redirectUri = `${origin}/api/auth/callback/p6`;
 
-  const url = new URL(`https://${domain}/oauth2/default/authorize`);
+  // Use Org AS (/oauth2/v1) — the id_token it issues has issuer = domain (no /oauth2/default suffix),
+  // which is what the Org AS expects as subject_token in IDENTITY_ASSERTION_CUSTOM_AS XAA.
+  const url = new URL(`https://${domain}/oauth2/v1/authorize`);
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("scope", "openid profile email");

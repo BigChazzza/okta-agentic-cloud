@@ -184,6 +184,7 @@ const MISSIONS: Partial<Record<PatternId, Mission[]>> = {
       prompt: "Run the Org Pulse report: delegate to the HR Worker to list all employees grouped by department, delegate to the Finance Worker to get the budget and expense summary per department, then cross-reference headcount with spend to show per-department cost-per-employee ratios, and post the combined analysis to Slack.",
       scheduleLabel: "User-initiated",
       requiresUserToken: true,
+      apiRoute: "/api/p6/run-delegated",
     },
   ],
 };

@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const tokenRes = await fetch(`https://${domain}/oauth2/default/token`, {
+  // Token exchange at Org AS — must match the authorize endpoint above.
+  const tokenRes = await fetch(`https://${domain}/oauth2/v1/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
