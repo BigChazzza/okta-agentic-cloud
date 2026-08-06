@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   const origin = process.env.NEXTAUTH_URL ?? req.nextUrl.origin;
   const redirectUri = `${origin}/api/auth/callback/p6`;
 
-  const url = new URL(`https://${domain}/oauth2/v1/authorize`);
+  const url = new URL(`https://${domain}/oauth2/default/authorize`);
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("scope", "openid profile email");

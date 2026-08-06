@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const tokenRes = await fetch(`https://${domain}/oauth2/v1/token`, {
+  const tokenRes = await fetch(`https://${domain}/oauth2/default/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
