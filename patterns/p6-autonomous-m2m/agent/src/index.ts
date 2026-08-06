@@ -601,7 +601,7 @@ app.post("/chat", async (req, res) => {
 
       const callTool = async (name: string, args: Record<string, unknown>): Promise<string> => {
         if (name === "post_slack_message") {
-          return postSlackMessage(args.text as string, (args.channel as string | undefined) ?? slackChannel);
+          return postSlackMessage(args.text as string, (args.channel as string | undefined) ?? slackChannel, slackToken);
         }
         const isFinance = finMcp.tools.some(t => t.name === name);
         const mcp = isFinance ? finMcp : hrMcp;
