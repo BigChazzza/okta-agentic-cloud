@@ -13,7 +13,7 @@ export function ConnectionGuide({ adapterUrl, variant = "developer-tools" }: Con
   const isConsumer = variant === "consumer-agent";
   const [copied, setCopied] = useState<string | null>(null);
 
-  const mcpServerName = isConsumer ? "okta-inventory" : "okta-mcp-adapter";
+  const mcpServerName = isConsumer ? "okta-inventory" : "okta-adapter";
   const vscodeJson = JSON.stringify(
     { servers: { [mcpServerName]: { type: "http", url: adapterUrl } } },
     null,
@@ -77,7 +77,9 @@ export function ConnectionGuide({ adapterUrl, variant = "developer-tools" }: Con
                 <div>
                   <p className="mb-1.5 text-xs font-medium text-slate-400">Claude Code (CLI)</p>
                   <CodeBlock
-                    text={`claude mcp add --transport http --scope user ${mcpServerName} ${adapterUrl}`}
+                    text={isConsumer
+                      ? `claude mcp add --transport http --scope user ${mcpServerName} ${adapterUrl}`
+                      : `claude mcp add -H "X-MCP-Agent: claude-code-agent" --client-id "https://claude.ai/oauth/claude-code-client-metadata" --transport http ${mcpServerName} ${adapterUrl}`}
                     copyKey="claude-cli"
                   />
                   {!isConsumer && (
