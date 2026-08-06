@@ -36,6 +36,13 @@ export async function POST(req: NextRequest) {
   // Per the P6 design: no auth header — the agent mints its own CC tokens
   const agentUrl = process.env.P6_AGENT_INTERNAL_URL ?? "http://localhost:3600";
   const forwardHeaders: Record<string, string> = { "Content-Type": "application/json" };
+
+  // Forward LLM credentials from browser settings so the agent can call the LLM
+  const llmApiKey  = req.headers.get("x-llm-api-key");
+  const llmProvider = req.headers.get("x-llm-provider");
+  if (llmApiKey)   forwardHeaders["x-llm-api-key"]   = llmApiKey;
+  if (llmProvider) forwardHeaders["x-llm-provider"]  = llmProvider;
+
   const slackChannel = req.headers.get("x-slack-channel");
   const slackToken   = req.headers.get("x-slack-token");
   if (slackChannel) forwardHeaders["x-slack-channel"] = slackChannel;
