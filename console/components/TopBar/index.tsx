@@ -11,22 +11,21 @@ const RESOURCE_LINKS = [
 
 export default function TopBar() {
   return (
-    <div className="flex w-full items-center justify-between px-5 py-2 border-b border-white/[0.06]"
-         style={{ borderBottomColor: "rgba(22,98,221,0.18)" }}>
-      {/* Left: Okta wordmark + sub-label */}
+    <div
+      className="flex w-full items-center justify-between px-5 py-2"
+      style={{ borderBottom: "1px solid rgba(22,98,221,0.18)" }}
+    >
+      {/* Left: Okta wordmark */}
       <div className="flex items-center gap-3">
         <OktaMark />
         <div className="hidden sm:flex flex-col leading-none">
-          <span className="text-[11px] font-semibold text-white/90 tracking-wide">
-            AI Patterns
-          </span>
-          <span className="text-[9px] text-white/30 uppercase tracking-[0.15em]">
-            Demo Console
-          </span>
+          <span className="text-[11px] font-semibold text-white/90 tracking-wide">AI Patterns</span>
+          <span className="text-[9px] text-white/30 uppercase tracking-[0.15em]">Demo Console</span>
         </div>
-        {/* Gradient divider */}
-        <div className="mx-2 hidden sm:block h-5 w-px"
-             style={{ background: "linear-gradient(to bottom, transparent, rgba(22,98,221,0.3), transparent)" }} />
+        <div
+          className="mx-2 hidden sm:block h-5 w-px"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(22,98,221,0.3), transparent)" }}
+        />
         <FooterBar />
       </div>
 
@@ -38,22 +37,9 @@ export default function TopBar() {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition-all duration-200"
-            style={{
-              borderColor: "rgba(22,98,221,0.2)",
-              backgroundColor: "rgba(22,98,221,0.05)",
-              color: "rgba(160,185,240,0.7)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(22,98,221,0.5)";
-              (e.currentTarget as HTMLAnchorElement).style.color = "#4B90F8";
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "rgba(22,98,221,0.12)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(22,98,221,0.2)";
-              (e.currentTarget as HTMLAnchorElement).style.color = "rgba(160,185,240,0.7)";
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "rgba(22,98,221,0.05)";
-            }}
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-medium transition-all duration-200
+              border border-[rgba(22,98,221,0.2)] bg-[rgba(22,98,221,0.05)] text-[rgba(160,185,240,0.7)]
+              hover:border-[rgba(22,98,221,0.5)] hover:bg-[rgba(22,98,221,0.12)] hover:text-blue-300"
           >
             <ExternalLink size={9} />
             {link.title}
@@ -64,11 +50,8 @@ export default function TopBar() {
 
         <Link
           href="/settings"
-          className="rounded p-1 transition-colors"
-          style={{ color: "rgba(255,255,255,0.2)" }}
+          className="rounded p-1 text-white/20 hover:text-blue-400 transition-colors"
           title="Settings"
-          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#4B90F8"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.2)"; }}
         >
           <Settings size={13} />
         </Link>
