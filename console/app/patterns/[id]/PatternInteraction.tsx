@@ -687,7 +687,7 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
                 agentUrl={pattern.agentUrl ?? ""}
                 patternId={pattern.id}
                 disabled={!active}
-                disabledReason={`Start this pattern: docker compose --profile ${pattern.id} up`}
+                disabledReason="Service offline — it may be waking up on Render"
                 presetPrompts={themeOverrides?.presetPrompts?.[pattern.id] ?? PRESET_PROMPTS[pattern.id]}
                 presetGroups={buildPresetGroups(pattern.id, agentLoadServers, themeOverrides)}
                 userToken={userToken ?? undefined}
@@ -763,7 +763,7 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
                 agentUrl={pattern.agentUrl ?? ""}
                 patternId={pattern.id}
                 disabled={!active}
-                disabledReason={`docker compose --profile ${pattern.id} up`}
+                disabledReason="Service offline — it may be waking up on Render"
                 missions={MISSIONS[pattern.id] ?? []}
                 userToken={userToken ?? undefined}
                 credentialHeaders={credentialHeaders}
@@ -806,7 +806,7 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
                   agentUrl={pattern.agentUrl ?? ""}
                   patternId={pattern.id}
                   disabled={!active}
-                  disabledReason={`Start this pattern: docker compose --profile ${pattern.id} up`}
+                  disabledReason="Service offline — it may be waking up on Render"
                   presetPrompts={PRESET_PROMPTS[pattern.id]}
                   userToken={userToken ?? undefined}
                   authStatus={
@@ -1031,10 +1031,7 @@ function UserLoginGate({ pattern, active }: { pattern: Pattern; active: boolean 
     return (
       <div className="flex h-full items-center justify-center rounded-xl border border-gray-700/50 bg-gray-800/60 p-6 text-center">
         <div>
-          <p className="mb-2 text-sm text-slate-500">Pattern {pattern.id.toUpperCase()} not running</p>
-          <code className="text-xs text-slate-600">
-            docker compose --profile {pattern.id} up
-          </code>
+          <p className="text-sm text-slate-500">Service offline — it may be waking up on Render</p>
         </div>
       </div>
     );

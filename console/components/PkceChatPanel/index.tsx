@@ -39,10 +39,7 @@ export function PkceChatPanel({ pattern, active }: { pattern: Pattern; active: b
     return (
       <div className="flex h-full items-center justify-center rounded-xl border border-gray-700/50 bg-gray-800/60 p-6 text-center">
         <div>
-          <p className="mb-2 text-sm text-slate-500">Pattern 5 not running</p>
-          <code className="text-xs text-slate-600">
-            docker compose --profile p5 up
-          </code>
+          <p className="text-sm text-slate-500">Service offline — it may be waking up on Render</p>
         </div>
       </div>
     );

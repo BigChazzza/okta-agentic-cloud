@@ -41,7 +41,7 @@ export function ChatPanel({
   preserveSessionOnNavigation = false,
   authStatus,
 }: ChatPanelProps) {
-  const { credentialHeaders } = useDemoCredentials();
+  const { credentialHeaders, loaded: credentialsLoaded } = useDemoCredentials();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -86,6 +86,9 @@ export function ChatPanel({
   }, []);
 
   useEffect(() => {
+    // Wait for sessionStorage credentials to load before sending — avoids empty
+    // x-llm-api-key header on the first request after a PKCE redirect.
+    if (!credentialsLoaded) return;
     if (userToken && !greeted.current && !disabled) {
       greeted.current = true;
       // Post-OAuth redirect: restored conversation exists → auto-send the pending question
@@ -107,7 +110,7 @@ export function ChatPanel({
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userToken, disabled]);
+  }, [userToken, disabled, credentialsLoaded]);
 
   async function sendText(text: string) {
     if (!text || loading || disabled) return;
