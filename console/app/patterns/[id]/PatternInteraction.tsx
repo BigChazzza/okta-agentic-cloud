@@ -494,8 +494,10 @@ interface Props {
   themeOverrides?: IndustryOverrides;
 }
 
-export function PatternInteraction({ pattern, active, userToken, themeOverrides }: Props) {
+export function PatternInteraction({ pattern, active: activeFromServer, userToken, themeOverrides }: Props) {
   const { credentialHeaders } = useDemoCredentials();
+  // Mirror SSR active flag into state so warmup can flip it without a reload.
+  const [active, setActive] = useState(activeFromServer);
   const [isWarming, setIsWarming] = useState(true);
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [openDiagram, setOpenDiagram] = useState<DiagramModal>(null);
@@ -598,7 +600,7 @@ export function PatternInteraction({ pattern, active, userToken, themeOverrides 
     <div className="flex h-full min-h-0 flex-col gap-3">
 
       {/* Service warmup overlay — shown until all Render services are ready */}
-      {isWarming && <ServiceWarmup onReady={() => setIsWarming(false)} />}
+      {isWarming && <ServiceWarmup onReady={() => { setIsWarming(false); setActive(true); }} />}
 
       {/* Compact header bar */}
       <div className="shrink-0 flex items-center gap-2 min-w-0">
