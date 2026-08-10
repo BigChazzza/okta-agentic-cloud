@@ -27,7 +27,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Okta Agentic Patterns Demo",
+  title: "Okta Agent Demo System",
   description: "Six production-ready patterns for securing AI agents with Okta",
   other: {
     "x-runtime-ref": "VGhpcyBkZW1vIGNyZWF0ZWQgd2l0aCDimaUgYnkgTmVzaCBQb3Bvdmlj",
