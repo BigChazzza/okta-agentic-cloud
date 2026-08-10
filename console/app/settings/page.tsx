@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
           {/* Provider toggle */}
           <div className="mb-4 flex gap-2">
-            {(["anthropic", "openai"] as const).map((p) => (
+            {(["anthropic", "openai", "litellm"] as const).map((p) => (
               <button
                 key={p}
                 disabled={!credsLoaded}
@@ -151,7 +151,7 @@ export default function SettingsPage() {
                     : "border-white/10 text-slate-400 hover:text-white"
                 }`}
               >
-                {p === "anthropic" ? "Anthropic" : "OpenAI"}
+                {p === "anthropic" ? "Anthropic" : p === "openai" ? "OpenAI" : "LiteLLM"}
               </button>
             ))}
           </div>
@@ -159,20 +159,30 @@ export default function SettingsPage() {
           {/* API key input */}
           <div className="mb-3">
             <label className="mb-1.5 block text-xs font-medium text-slate-400">
-              {creds.provider === "anthropic" ? "Anthropic API Key" : "OpenAI API Key"}
+              {creds.provider === "anthropic" ? "Anthropic API Key" :
+               creds.provider === "openai"    ? "OpenAI API Key" :
+               "LiteLLM API Key"}
             </label>
             <div className="flex gap-2">
               <input
                 type={showKey ? "text" : "password"}
                 disabled={!credsLoaded}
-                placeholder={creds.provider === "anthropic" ? "sk-ant-…" : "sk-…"}
-                value={creds.provider === "anthropic" ? creds.anthropicKey : creds.openaiKey}
+                placeholder={
+                  creds.provider === "anthropic" ? "sk-ant-…" :
+                  creds.provider === "openai"    ? "sk-…" :
+                  "Enter your LiteLLM key…"
+                }
+                value={
+                  creds.provider === "anthropic" ? creds.anthropicKey :
+                  creds.provider === "openai"    ? creds.openaiKey :
+                  creds.litellmKey
+                }
                 onChange={(e) =>
                   setCreds({
                     ...creds,
-                    ...(creds.provider === "anthropic"
-                      ? { anthropicKey: e.target.value }
-                      : { openaiKey: e.target.value }),
+                    ...(creds.provider === "anthropic" ? { anthropicKey: e.target.value } :
+                        creds.provider === "openai"    ? { openaiKey:    e.target.value } :
+                                                         { litellmKey:   e.target.value }),
                   })
                 }
                 className={inputCls}
