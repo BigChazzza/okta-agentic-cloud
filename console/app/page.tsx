@@ -59,7 +59,7 @@ export default async function Home() {
             backgroundClip: "text",
           }}
         >
-          Okta{industryId !== DEFAULT_INDUSTRY_ID ? ` ${industry.label}` : ""} Agent Demo System
+          Okta{industryId !== DEFAULT_INDUSTRY_ID ? ` ${industry.label}` : ""} Agentic Demo
         </h1>
 
         <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-slate-400">
