@@ -309,7 +309,7 @@ function decodeJwtPayload(token: string): Record<string, unknown> {
   }
 }
 
-interface LLMOverrides { anthropicKey?: string; openaiKey?: string; }
+interface LLMOverrides { anthropicKey?: string; openaiKey?: string; baseUrl?: string; }
 
 type ToolExecutor = (name: string, args: Record<string, unknown>) => Promise<string>;
 
@@ -388,7 +388,7 @@ async function* runOpenAI(
   tools: ToolDef[],
   overrides?: LLMOverrides
 ): AsyncGenerator<string> {
-  const openai = new OpenAI({ ...(overrides?.openaiKey && { apiKey: overrides.openaiKey }) });
+  const openai = new OpenAI({ ...(overrides?.openaiKey && { apiKey: overrides.openaiKey }), ...(overrides?.baseUrl && { baseURL: overrides.baseUrl }) });
   const openaiTools: OpenAI.ChatCompletionTool[] = tools.map((t) => ({
     type: "function" as const,
     function: { name: t.name, description: t.description, parameters: t.inputSchema },
@@ -494,6 +494,7 @@ app.post("/chat", async (req, res) => {
       ? String(req.headers["x-llm-api-key"]) : undefined,
     openaiKey: req.headers["x-llm-api-key"] && req.headers["x-llm-provider"] === "openai"
       ? String(req.headers["x-llm-api-key"]) : undefined,
+    baseUrl: req.headers["x-llm-base-url"] ? String(req.headers["x-llm-base-url"]) : undefined,
   };
 
   const authHeader = req.headers.authorization;

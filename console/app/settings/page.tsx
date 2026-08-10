@@ -199,6 +199,25 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* LiteLLM base URL */}
+          {creds.provider === "litellm" && (
+            <div className="mb-3">
+              <label className="mb-1.5 block text-xs font-medium text-slate-400">
+                LiteLLM Proxy Base URL
+              </label>
+              <input
+                type="text"
+                disabled={!credsLoaded}
+                placeholder="https://litellm.company.com/v1"
+                value={creds.litellmBaseUrl}
+                onChange={(e) => setCreds({ ...creds, litellmBaseUrl: e.target.value })}
+                className={inputCls}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </div>
+          )}
+
           {/* Slack token + channel */}
           <div className="mb-3">
             <label className="mb-1.5 block text-xs font-medium text-slate-400">Slack Bot Token (optional — P4 / P6)</label>

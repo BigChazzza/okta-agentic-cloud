@@ -4,6 +4,7 @@ import { getPattern } from "@/lib/patterns";
 const CREDENTIAL_HEADERS = [
   "x-llm-api-key",
   "x-llm-provider",
+  "x-llm-base-url",
   "x-slack-token",
   "x-slack-channel",
 ];
