@@ -48,12 +48,10 @@ export async function POST(req: NextRequest) {
   };
 
   // Forward LLM credentials from browser settings
-  const llmApiKey   = req.headers.get("x-llm-api-key");
+  const llmApiKey = req.headers.get("x-llm-api-key");
   const llmProvider = req.headers.get("x-llm-provider");
-  const llmBaseUrl  = req.headers.get("x-llm-base-url");
   if (llmApiKey)   forwardHeaders["x-llm-api-key"]   = llmApiKey;
   if (llmProvider) forwardHeaders["x-llm-provider"]  = llmProvider;
-  if (llmBaseUrl)  forwardHeaders["x-llm-base-url"]  = llmBaseUrl;
 
   const slackChannel = req.headers.get("x-slack-channel");
   const slackToken   = req.headers.get("x-slack-token");

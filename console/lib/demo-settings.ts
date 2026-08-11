@@ -5,11 +5,9 @@ import { useState, useEffect, useCallback } from "react";
 const STORAGE_KEY = "okta-demo-credentials";
 
 export interface DemoCredentials {
-  provider: "anthropic" | "openai" | "litellm";
+  provider: "anthropic" | "openai";
   anthropicKey: string;
   openaiKey: string;
-  litellmKey: string;
-  litellmBaseUrl: string;
   slackToken: string;
   slackChannel: string;
 }
@@ -18,8 +16,6 @@ const DEFAULTS: DemoCredentials = {
   provider: "anthropic",
   anthropicKey: "",
   openaiKey: "",
-  litellmKey: "",
-  litellmBaseUrl: "",
   slackToken: "",
   slackChannel: "",
 };
@@ -66,14 +62,6 @@ export function useDemoCredentials() {
         ...(creds.provider === "openai" && creds.openaiKey
           ? { "X-LLM-Api-Key": creds.openaiKey, "X-LLM-Provider": "openai" }
           : {}),
-        // LiteLLM uses the OpenAI-compatible API — agents route through the OpenAI SDK path.
-        ...(creds.provider === "litellm" && creds.litellmKey
-          ? {
-              "X-LLM-Api-Key": creds.litellmKey,
-              "X-LLM-Provider": "openai",
-              ...(creds.litellmBaseUrl ? { "X-LLM-Base-URL": creds.litellmBaseUrl } : {}),
-            }
-          : {}),
         ...(creds.slackToken ? { "X-Slack-Token": creds.slackToken } : {}),
         ...(creds.slackChannel ? { "X-Slack-Channel": creds.slackChannel } : {}),
       }
@@ -81,8 +69,7 @@ export function useDemoCredentials() {
 
   const hasApiKey = loaded
     ? (creds.provider === "anthropic" && !!creds.anthropicKey) ||
-      (creds.provider === "openai" && !!creds.openaiKey) ||
-      (creds.provider === "litellm" && !!creds.litellmKey)
+      (creds.provider === "openai" && !!creds.openaiKey)
     : false;
 
   return { creds, setCreds, credentialHeaders, hasApiKey, loaded };

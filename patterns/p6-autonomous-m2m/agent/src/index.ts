@@ -393,7 +393,7 @@ function buildTools(workers: WorkerCfg[]): ToolDef[] {
 // ── LLM agent loop (streamed to the console) ───────────────────────────────────
 interface Message { role: "user" | "assistant"; content: string; }
 type ToolExecutor = (name: string, args: Record<string, unknown>) => Promise<string>;
-interface LLMOverrides { anthropicKey?: string; openaiKey?: string; baseUrl?: string; }
+interface LLMOverrides { anthropicKey?: string; openaiKey?: string; }
 
 async function* runAgentLoop(userMessage: string, history: Message[], callTool: ToolExecutor, tools: ToolDef[], workerLabels: string[], overrides?: LLMOverrides): AsyncGenerator<string> {
   const messages: Message[] = [...history, { role: "user", content: userMessage }];
@@ -435,7 +435,7 @@ async function* runAnthropic(messages: Message[], system: string, callTool: Tool
 }
 
 async function* runOpenAI(messages: Message[], system: string, callTool: ToolExecutor, tools: ToolDef[], overrides?: LLMOverrides): AsyncGenerator<string> {
-  const openai = new OpenAI({ ...(overrides?.openaiKey && { apiKey: overrides.openaiKey }), ...(overrides?.baseUrl && { baseURL: overrides.baseUrl }) });
+  const openai = new OpenAI({ ...(overrides?.openaiKey && { apiKey: overrides.openaiKey }) });
   const openaiTools: OpenAI.ChatCompletionTool[] = tools.map((t) => ({ type: "function" as const, function: { name: t.name, description: t.description, parameters: t.inputSchema } }));
   let msgs: OpenAI.ChatCompletionMessageParam[] = [{ role: "system", content: system }, ...messages.map((m) => ({ role: m.role, content: m.content }))];
   while (true) {
@@ -518,7 +518,6 @@ app.post("/chat", async (req, res) => {
       ? String(req.headers["x-llm-api-key"]) : undefined,
     openaiKey: req.headers["x-llm-api-key"] && req.headers["x-llm-provider"] === "openai"
       ? String(req.headers["x-llm-api-key"]) : undefined,
-    baseUrl: req.headers["x-llm-base-url"] ? String(req.headers["x-llm-base-url"]) : undefined,
   };
   const slackToken = req.headers["x-slack-token"] ? String(req.headers["x-slack-token"]) : undefined;
   const slackChannel = req.headers["x-slack-channel"] ? String(req.headers["x-slack-channel"]) : undefined;
