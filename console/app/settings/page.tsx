@@ -31,6 +31,7 @@ export default function SettingsPage() {
 
   const { creds, setCreds, loaded: credsLoaded } = useDemoCredentials();
   const [showKey, setShowKey] = useState(false);
+  const [slackDefaults, setSlackDefaults] = useState<{ slackToken: string; slackChannel: string } | null>(null);
 
   useEffect(() => {
     fetch("/api/settings")
@@ -42,7 +43,24 @@ export default function SettingsPage() {
     fetch("/api/ui-theme")
       .then((r) => r.json())
       .then((data) => { if (data.uiThemeId) setUiThemeId(data.uiThemeId as VisualThemeId); });
+    fetch("/api/slack-defaults")
+      .then((r) => r.json())
+      .then((data) => setSlackDefaults(data));
   }, []);
+
+  // First-time fill: if the browser has no saved Slack token yet, apply the server default.
+  // Never overwrites a token the user already saved/edited themselves.
+  useEffect(() => {
+    if (!credsLoaded || !slackDefaults || creds.slackToken) return;
+    if (slackDefaults.slackToken || slackDefaults.slackChannel) {
+      setCreds({ ...creds, slackToken: slackDefaults.slackToken, slackChannel: slackDefaults.slackChannel });
+    }
+  }, [credsLoaded, slackDefaults]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function resetSlackToDefault() {
+    if (!slackDefaults) return;
+    setCreds({ ...creds, slackToken: slackDefaults.slackToken, slackChannel: slackDefaults.slackChannel });
+  }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -190,18 +208,40 @@ export default function SettingsPage() {
           </div>
 
           {/* Slack token + channel */}
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-medium text-slate-400">Slack Bot Token (optional — P4 / P6)</label>
+            {slackDefaults && (slackDefaults.slackToken || slackDefaults.slackChannel) && (
+              <button
+                type="button"
+                onClick={resetSlackToDefault}
+                disabled={!credsLoaded}
+                className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50"
+                title="Overwrite with the token/channel configured on the server"
+              >
+                Reset to default
+              </button>
+            )}
+          </div>
           <div className="mb-3">
-            <label className="mb-1.5 block text-xs font-medium text-slate-400">Slack Bot Token (optional — P4 / P6)</label>
-            <input
-              type="password"
-              disabled={!credsLoaded}
-              placeholder="xoxb-…"
-              value={creds.slackToken}
-              onChange={(e) => setCreds({ ...creds, slackToken: e.target.value })}
-              className={inputCls}
-              autoComplete="off"
-              spellCheck={false}
-            />
+            <div className="flex gap-2">
+              <input
+                type={showKey ? "text" : "password"}
+                disabled={!credsLoaded}
+                placeholder="xoxb-…"
+                value={creds.slackToken}
+                onChange={(e) => setCreds({ ...creds, slackToken: e.target.value })}
+                className={inputCls}
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <button
+                onClick={() => setShowKey((v) => !v)}
+                className="rounded-lg border border-white/10 p-2 text-slate-400 hover:text-white transition-colors"
+                title={showKey ? "Hide token" : "Show token"}
+              >
+                {showKey ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="mb-1.5 block text-xs font-medium text-slate-400">Slack Channel (optional — P6)</label>
