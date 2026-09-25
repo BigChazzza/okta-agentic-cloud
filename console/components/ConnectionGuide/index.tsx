@@ -79,18 +79,23 @@ export function ConnectionGuide({ adapterUrl, variant = "developer-tools" }: Con
                   <CodeBlock
                     text={isConsumer
                       ? `claude mcp add --transport http --scope user ${mcpServerName} ${adapterUrl}`
-                      : `claude mcp add -H "X-MCP-Agent: claude-code-agent" --client-id "https://claude.ai/oauth/claude-code-client-metadata" --transport http ${mcpServerName} ${adapterUrl}`}
+                      : `claude mcp add ai-patterns-gateway https://demo-ai-patterns.gateway.oktapreview.com/mcp/servers/developer-tools/mcp/servers/demogateway/ \\\n  --transport http \\\n  --callback-port 9898`}
                     copyKey="claude-cli"
                   />
                   {!isConsumer && (
-                    <div className="mt-2 rounded-lg border border-amber-500/25 bg-amber-500/8 px-3 py-2.5">
-                      <p className="text-xs text-amber-300/80 leading-relaxed">
-                        <span className="font-semibold text-amber-300">Note:</span> If the <span className="font-mono text-amber-200">/mcp</span> command is showing stale info it is because MCP servers are initialized at session startup. The server was added mid-session, so the current session doesn&apos;t reflect it.
+                    <>
+                      <p className="mt-1.5 text-xs text-slate-500">
+                        Add <span className="font-mono text-slate-400">--client-id</span> / <span className="font-mono text-slate-400">--client-secret</span> for your own gateway app.
                       </p>
-                      <p className="mt-1.5 text-xs text-amber-300/80 leading-relaxed">
-                        <span className="font-semibold text-amber-300">Fix:</span> Start a new Claude Code session. The <span className="font-mono text-amber-200">/mcp</span> command will then show <span className="font-mono text-amber-200">okta-mcp-bridge</span> as connected.
-                      </p>
-                    </div>
+                      <div className="mt-2 rounded-lg border border-amber-500/25 bg-amber-500/8 px-3 py-2.5">
+                        <p className="text-xs text-amber-300/80 leading-relaxed">
+                          <span className="font-semibold text-amber-300">Note:</span> If the <span className="font-mono text-amber-200">/mcp</span> command is showing stale info it is because MCP servers are initialized at session startup. The server was added mid-session, so the current session doesn&apos;t reflect it.
+                        </p>
+                        <p className="mt-1.5 text-xs text-amber-300/80 leading-relaxed">
+                          <span className="font-semibold text-amber-300">Fix:</span> Start a new Claude Code session. The <span className="font-mono text-amber-200">/mcp</span> command will then show <span className="font-mono text-amber-200">ai-patterns-gateway</span> as connected.
+                        </p>
+                      </div>
+                    </>
                   )}
                 </div>
                 <div>
@@ -153,7 +158,7 @@ export function ConnectionGuide({ adapterUrl, variant = "developer-tools" }: Con
               <p className="text-xs text-slate-500">
                 {isConsumer
                   ? "Each tool call shows the full identity chain: sub=user_email, act.sub=wlp_xxx (your identity + the agent's identity)."
-                  : "Each tool call triggers an XAA token exchange — visible in the event stream."}
+                  : "Each tool call routed through the Agent Gateway shows up live in the event stream below, pulled directly from Okta's System Log."}
               </p>
             </div>
           </li>
