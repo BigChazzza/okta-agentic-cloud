@@ -1,4 +1,4 @@
-export type PatternId = "p1" | "p2" | "p3" | "p4" | "p5" | "p6" | "p7" | "p8";
+export type PatternId = "p0" | "p1" | "p2" | "p3" | "p4" | "p5" | "p6" | "p7" | "p8";
 
 export interface McpServerDef {
   name: string;   // display name shown in the UI
@@ -31,9 +31,24 @@ export interface Pattern {
   mcpServers?: McpServerDef[]; // MCP resource servers used by this pattern
   platforms?: PlatformLink[]; // P8: per-platform video (detail page) + architecture diagram (landing card) links
   hidden?: boolean; // when true, omit from the home-page grid (detail page still accessible)
+  externalUrl?: string; // when set, the card opens this URL in a new tab instead of navigating to /patterns/[id]
 }
 
 export const PATTERNS: Pattern[] = [
+  {
+    id: "p0",
+    title: "Agent Orchestration",
+    subtitle: "Dynamically create and manage AI agents in Okta via API",
+    description:
+      "Create agents dynamically via API, add owners and resources on the fly. Integrate Okta into your orchestration platform.",
+    agentType: "Orchestration Platform",
+    authFlow: "Okta Management API",
+    requiresAdapter: false,
+    agentUrl: null,
+    rightPanel: "connection-guide",
+    buildStatus: "done",
+    externalUrl: "https://okta-agent-platform.vercel.app/",
+  },
   {
     id: "p1",
     title: "3rd Party Coding Assistant",
@@ -196,7 +211,7 @@ export const PATTERNS: Pattern[] = [
     agentHealthUrl: process.env.P7_AGENT_INTERNAL_URL ?? "http://p7-saas-agent:3700",
     rightPanel: "delegation",
     requiresUserToken: true,
-    buildStatus: "done",
+    buildStatus: "pending",
     mcpServers: [
       {
         name: "HR Server MCP",

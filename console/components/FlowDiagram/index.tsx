@@ -10,6 +10,7 @@ interface FlowDiagramProps {
 }
 
 const diagrams: Record<PatternId, React.ReactNode> = {
+  p0: <P0Diagram />,
   p1: <P1Diagram />,
   p2: <P2Diagram />,
   p3: <P3Diagram />,
@@ -157,6 +158,17 @@ function PathArrow({
 }
 
 // ── Pattern diagrams ──────────────────────────────────────────────────────────
+
+function P0Diagram() {
+  return (
+    <svg viewBox="0 0 380 200" className="w-full max-w-sm">
+      <Node label="Orchestration Platform" sub="your app" color="cyan" x={100} y={100} tall />
+      <Arrow x1={175} y1={90} x2={245} y2={90} label="create agent" color="#22d3ee" />
+      <Arrow x1={245} y1={110} x2={175} y2={110} label="owners / resources" color="#a855f7" />
+      <Node label="Okta" sub="Management API" color="amber" x={295} y={100} />
+    </svg>
+  );
+}
 
 function P1Diagram() {
   const cyan = "#22d3ee";

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowRight, Shield } from "lucide-react";
+import { ArrowRight, ExternalLink, Shield } from "lucide-react";
 import { Pattern } from "@/lib/patterns";
 import { ArchDiagramModal } from "@/components/ArchDiagramModal";
 
@@ -21,13 +21,21 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
   const router = useRouter();
   const [showDiagram, setShowDiagram] = useState(false);
 
+  const goToPattern = () => {
+    if (pattern.externalUrl) {
+      window.open(pattern.externalUrl, "_blank", "noopener,noreferrer");
+    } else {
+      router.push(`/patterns/${pattern.id}`);
+    }
+  };
+
   return (
     <>
       <div
         role="button"
         tabIndex={0}
-        onClick={() => router.push(`/patterns/${pattern.id}`)}
-        onKeyDown={(e) => e.key === "Enter" && router.push(`/patterns/${pattern.id}`)}
+        onClick={goToPattern}
+        onKeyDown={(e) => e.key === "Enter" && goToPattern()}
         className={`relative flex flex-col rounded-xl border p-6 neon-card cursor-pointer ${borderClass[pattern.buildStatus]}`}
       >
         {/* Header row */}
@@ -100,7 +108,20 @@ export function PatternCard({ pattern, active }: PatternCardProps) {
         )}
 
         {/* CTA */}
-        {pattern.buildStatus === "pending" && pattern.note ? (
+        {pattern.externalUrl ? (
+          <button
+            onClick={(e) => { e.stopPropagation(); goToPattern(); }}
+            className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium neon-btn border transition-all"
+            style={{
+              background: "rgba(22,98,221,0.15)",
+              color: "#4B90F8",
+              borderColor: "rgba(22,98,221,0.35)",
+            }}
+          >
+            Open Platform
+            <ExternalLink size={14} />
+          </button>
+        ) : pattern.buildStatus === "pending" && pattern.note ? (
           <div className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium bg-gray-700/30 text-slate-600 border border-gray-700/40 cursor-not-allowed select-none">
             Coming Soon
           </div>
