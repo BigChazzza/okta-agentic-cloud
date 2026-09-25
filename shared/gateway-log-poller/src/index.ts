@@ -61,7 +61,9 @@ function mapLogEntryToEvent(entry: OktaLogEntry) {
     action: `called ${capability}`,
     target: targetLabel,
     detail: user ? `user=${user}` : undefined,
-    level: entry.outcome?.result === "SUCCESS" ? "info" : "error",
+    // "token" renders green in EventStream — matches how every other pattern
+    // colors successful Okta-issued/validated actions (see p3/p6/p7 emitEvent calls).
+    level: entry.outcome?.result === "SUCCESS" ? "token" : "error",
   };
 }
 
